@@ -13,3 +13,5 @@ C:\projects\Task3\Task3\obj\Debug\net6.0\refint\Task3.dll
 C:\projects\Task3\Task3\obj\Debug\net6.0\Task3.pdb
 C:\projects\Task3\Task3\obj\Debug\net6.0\Task3.genruntimeconfig.cache
 C:\projects\Task3\Task3\obj\Debug\net6.0\ref\Task3.dll
+C:\projects\Task3\Task3\bin\Debug\net6.0\ConsoleTables.dll
+C:\projects\Task3\Task3\obj\Debug\net6.0\Task3.csproj.CopyComplete

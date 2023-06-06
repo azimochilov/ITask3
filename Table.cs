@@ -1,4 +1,5 @@
-﻿using ConsoleTables;
+﻿using System;
+using ConsoleTables;
 
 namespace Task3;
 

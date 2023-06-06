@@ -1,146 +1,29 @@
 ﻿using System;
-using System.Security.Cryptography;
+namespace Task3;
 
-public class RockPaperScissorsGame
+public static class Task3
 {
     public static void Main(string[] args)
     {
-        if (args.Length < 3 || args.Length % 2 == 0)
-        {
-            Console.WriteLine("Incorrect number of arguments. Please provide an odd number of non-repeating strings.");
-            Console.WriteLine("Example: dotnet run rock paper scissors lizard Spock");
-            return;
-        }
+        var exampleText = "Example: dotnet run paper rock scissors.";
 
-        Console.WriteLine("HMAC key: " + GenerateKey());
-        Console.WriteLine("Available moves:");
-        for (int i = 0; i < args.Length; i++)
+        if (args.Length < 3)
         {
-            Console.WriteLine((i + 1) + " - " + args[i]);
+            Console.WriteLine($"Number of arguments should be more than 2.\nYou entered {args.Length} arguments.\n" + exampleText);
         }
-        Console.WriteLine("0 - exit");
-        Console.WriteLine("? - help");
-
-        int userMove = GetUserMove(args.Length);
-        if (userMove == 0)
+        else if (args.Length % 2 == 0)
         {
-            Console.WriteLine("Exiting the game.");
-            return;
+            Console.WriteLine($"Number of arguments should be odd number.\nYou entered {args.Length} arguments.\n" + exampleText);
         }
-
-        string userMoveString = args[userMove - 1];
-        string computerMove = GenerateComputerMove(args.Length);
-        Console.WriteLine("Your move: " + userMoveString);
-        Console.WriteLine("Computer move: " + computerMove);
-
-        int result = DetermineWinner(userMove, computerMove, args.Length);
-        if (result == 0)
+        else if (args.Any(i => args.Count(j => i == j) > 1))
         {
-            Console.WriteLine("It's a draw!");
-        }
-        else if (result > 0)
-        {
-            Console.WriteLine("You win!");
+            string dublicate = args.FirstOrDefault(i => args.Count(j => i == j) > 1);
+            Console.WriteLine($"Do not dublicate arguments.\nYou entered '{dublicate}' more than one time.\n" + exampleText);
         }
         else
         {
-            Console.WriteLine("Computer wins!");
-        }
-
-        Console.WriteLine("HMAC key: " + GenerateKey());
-    }
-
-    private static string GenerateKey()
-    {
-        using (var rng = new RNGCryptoServiceProvider())
-        {
-            byte[] keyBytes = new byte[32];
-            rng.GetBytes(keyBytes);
-            return BitConverter.ToString(keyBytes).Replace("-", "");
-        }
-    }
-
-    private static int GetUserMove(int numMoves)
-    {
-        int userMove;
-        do
-        {
-            Console.Write("Enter your move: ");
-            string input = Console.ReadLine();
-            if (input == "?")
-            {
-                DisplayHelpTable(numMoves);
-                continue;
-            }
-            if (int.TryParse(input, out userMove) && userMove >= 0 && userMove <= numMoves)
-            {
-                return userMove;
-            }
-            Console.WriteLine("Invalid input. Please try again.");
-        } while (true);
-    }
-
-    private static void DisplayHelpTable(int numMoves)
-    {
-        Console.WriteLine("╔═══════════════════════════════════╗");
-        Console.WriteLine("║           Help - Moves             ║");
-        Console.WriteLine("╠═══════════════════════════════════╣");
-        Console.WriteLine("║   Move   ║   Win    ║   Lose   ║Draw║");
-        Console.WriteLine("╠══════════╬═════════╬═════════╬════╣");
-
-        // Define an array of colors
-        ConsoleColor[] colors = { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Blue, ConsoleColor.Yellow, ConsoleColor.Magenta };
-
-        for (int i = 1; i <= numMoves; i++)
-        {
-            string move = GetMoveName(i);
-            string win = GetMoveName((i % numMoves) + 1);
-            string lose = GetMoveName((i + 1) % numMoves + 1);
-
-            // Set the color based on the move index
-            ConsoleColor color = colors[i - 1];
-            Console.ForegroundColor = color;
-
-            Console.WriteLine($"║ {move,-8} ║ {win,-8} ║ {lose,-8} ║Draw║");
-
-            Console.ResetColor();
-        }
-
-        Console.WriteLine("╚══════════╩═════════╩═════════╩════╝");
-    }
-
-
-
-    private static string GetMoveName(int moveIndex)
-    {
-        return moveIndex.ToString();
-    }
-
-    private static string GenerateComputerMove(int numMoves)
-    {
-        using (var rng = new RNGCryptoServiceProvider())
-        {
-            byte[] randomNumber = new byte[1];
-            rng.GetBytes(randomNumber);
-            return GetMoveName(randomNumber[0] % numMoves + 1);
-        }
-    }
-
-    private static int DetermineWinner(int userMove, string computerMove, int numMoves)
-    {
-        int halfMoves = numMoves / 2;
-        int computerMoveIndex = int.Parse(computerMove);
-        if (userMove == computerMoveIndex)
-        {
-            return 0; // Draw
-        }
-        else if ((userMove > computerMoveIndex && userMove - computerMoveIndex <= halfMoves) || (userMove < computerMoveIndex && computerMoveIndex - userMove > halfMoves))
-        {
-            return 1; // User wins
-        }
-        else
-        {
-            return -1; // Computer wins
+            var game = new Game(args);
+            game.Run();
         }
     }
 }
