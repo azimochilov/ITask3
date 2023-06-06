@@ -33,7 +33,7 @@ public class RockPaperScissorsGame
         Console.WriteLine("Your move: " + userMoveString);
         Console.WriteLine("Computer move: " + computerMove);
 
-        int result = DetermineWinner(userMove, int.Parse(computerMove), args.Length);
+        int result = DetermineWinner(userMove, computerMove, args.Length);
         if (result == 0)
         {
             Console.WriteLine("It's a draw!");
@@ -109,6 +109,8 @@ public class RockPaperScissorsGame
         Console.WriteLine("╚══════════╩═════════╩═════════╩════╝");
     }
 
+
+
     private static string GetMoveName(int moveIndex)
     {
         return moveIndex.ToString();
@@ -120,18 +122,19 @@ public class RockPaperScissorsGame
         {
             byte[] randomNumber = new byte[1];
             rng.GetBytes(randomNumber);
-            return (randomNumber[0] % numMoves + 1).ToString();
+            return GetMoveName(randomNumber[0] % numMoves + 1);
         }
     }
 
-    private static int DetermineWinner(int userMove, int computerMove, int numMoves)
+    private static int DetermineWinner(int userMove, string computerMove, int numMoves)
     {
         int halfMoves = numMoves / 2;
-        if (userMove == computerMove)
+        int computerMoveIndex = int.Parse(computerMove);
+        if (userMove == computerMoveIndex)
         {
             return 0; // Draw
         }
-        else if ((userMove > computerMove && userMove - computerMove <= halfMoves) || (userMove < computerMove && computerMove - userMove > halfMoves))
+        else if ((userMove > computerMoveIndex && userMove - computerMoveIndex <= halfMoves) || (userMove < computerMoveIndex && computerMoveIndex - userMove > halfMoves))
         {
             return 1; // User wins
         }
